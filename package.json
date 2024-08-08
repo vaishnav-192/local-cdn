@@ -6,9 +6,7 @@
   "scripts": {
     "start": "node master.js",
     "start-master": "nodemon master.js",
-    "start-server1": "cross-env PORT=4000 nodemon server.js",
-    "start-server2": "cross-env PORT=4001 nodemon server.js",
-    "start-server3": "cross-env PORT=4002 nodemon server.js",
+    "start-server": "cross-env PORT=4000 nodemon server.js",
     "dev": "npm-run-all --parallel start-master start-server1 start-server2 start-server3"
   },
   "keywords": [],
