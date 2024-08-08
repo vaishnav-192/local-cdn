@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <h1>Upload File</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Choose file:</label>
+        <input type="file" id="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h1>Fetch File</h1>
+    <form id="fetchForm">
+        <label for="fileName">File Name:</label>
+        <input type="text" id="fileName" name="fileName" required>
+        <button type="submit">Fetch</button>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            formData.append('file', document.getElementById('file').files[0]);
+
+            try {
+                await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                alert('File uploaded successfully');
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                alert('Error uploading file');
+            }
+        });
+
+        document.getElementById('fetchForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const fileName = document.getElementById('fileName').value;
+
+            try {
+                const response = await fetch(`/fetchFile?fileName=${encodeURIComponent(fileName)}`);
+                const results = await response.json();
+                localStorage.setItem('fileResults', JSON.stringify(results));
+                window.location.href = 'results.html';
+            } catch (error) {
+                console.error('Error fetching file:', error);
+                alert('Error fetching file');
+            }
+        });
+    </script>
+</body>
+</html>

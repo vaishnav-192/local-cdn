@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Results</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>File Results</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ContentType</th>
+                <th>FileName</th>
+                <th>Server Info</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const results = JSON.parse(localStorage.getItem('fileResults'));
+
+            if (results && results.length > 0) {
+                const resultsBody = document.getElementById('resultsBody');
+
+                results.forEach(result => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${result.contentType}</td>
+                        <td>${result.fileName}</td>
+                        <td><a href="${result.server}" target="_blank">Download Here!</a></td>
+                    `;
+                    resultsBody.appendChild(row);
+                });
+            } else {
+                alert('No results found');
+            }
+        });
+    </script>
+</body>
+</html>
