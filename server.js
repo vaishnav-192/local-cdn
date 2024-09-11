@@ -5,10 +5,12 @@ const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
 const mime = require('mime-types');
+require('dotenv').config();
+
 
 const port = process.env.PORT || 4000; // Use PORT environment variable or default to 4000
 const serverAddress = `http://localhost:${port}`;
-const masterNodeAddress = 'http://localhost:3000'; // Replace with the actual master node address
+const masterNodeAddress = 'https://local-cdn-master.vercel.app'; // Replace with the actual master node address
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -46,10 +48,14 @@ const upload = multer({ storage });
 // Register this server with the master node
 const registerServer = async () => {
     try {
-        await axios.post(`${masterNodeAddress}/registerServer`, { serverAddress, name: `Server on port ${port}`, port });
-        console.log(`Server registered with master node at ${masterNodeAddress}`);
+        console.log(`Attempting to register server: ${serverAddress}`); // Log the attempt
+        await axios.post(`${masterNodeAddress}/registerServer`, {
+            serverAddress,
+            name: `Server on port ${port}`,
+        });
+        console.log(`Server successfully registered with master node`);
     } catch (error) {
-        console.error('Error registering server:', error);
+        console.error('Error registering server:', error.message); // Log error details
     }
 };
 
