@@ -13,16 +13,17 @@
             <tr>
                 <th>ContentType</th>
                 <th>FileName</th>
-                <th>Server Info</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody id="resultsBody">
-        </tbody>
+        <tbody id="resultsBody"></tbody>
     </table>
 
+    <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const results = JSON.parse(localStorage.getItem('fileResults'));
+            const client = new WebTorrent();
 
             if (results && results.length > 0) {
                 const resultsBody = document.getElementById('resultsBody');
@@ -32,9 +33,36 @@
                     row.innerHTML = `
                         <td>${result.contentType}</td>
                         <td>${result.fileName}</td>
-                        <td><a href="${result.server}" target="_blank">Download Here!</a></td>
+                        <td><button data-magnet="${result.magnetLink}">Download Here!</button></td>
                     `;
                     resultsBody.appendChild(row);
+                });
+
+                // Add event listeners to all the download buttons
+                resultsBody.addEventListener('click', function (e) {
+                    if (e.target && e.target.tagName === 'BUTTON') {
+                        const magnetURI = e.target.getAttribute('data-magnet');
+
+                        // Start the torrent download
+                        client.add(magnetURI, torrent => {
+                            torrent.files.forEach(file => {
+                                file.getBlob((err, blob) => {
+                                    if (err) {
+                                        console.error('Error getting blob:', err);
+                                        return;
+                                    }
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = file.name;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                    URL.revokeObjectURL(url);
+                                });
+                            });
+                        });
+                    }
                 });
             } else {
                 alert('No results found');
