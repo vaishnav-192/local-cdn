@@ -14,6 +14,7 @@ dotenv.config();
 const port = process.env.PORT || 4000;
 const masterNodeAddress = process.env.MASTER_NODE || 'https://local-cdn-master.vercel.app';
 const client = new WebTorrent();
+client.setMaxListeners(30);
 
 // Serve static files
 const app = express();
