@@ -124,7 +124,7 @@ const sendHeartbeat = async () => {
     }
 };
 
-setInterval(sendHeartbeat, 1800000); // Send heartbeat every 30 minutes
+setInterval(sendHeartbeat, 480000); // Send heartbeat every 8 minutes
 
 
 // Start server and register it with the master node
