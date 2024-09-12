@@ -15,15 +15,13 @@ function renderDownloadResults(results) {
         listItem.innerHTML = `
         <span>Content Type:</span> ${result.contentType} <br>
         <span>File Name:</span> ${result.fileName} <br>
-        <span>Server:</span> ${result.server}
+        <span>Server:</span> <a href="${result.server}" target="_blank">Download Here!</a>
       `;
         list.appendChild(listItem);
     });
 
     downloadResults.appendChild(list);
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const downloadForm = document.getElementById('downloadForm');
